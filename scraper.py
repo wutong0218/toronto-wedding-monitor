@@ -107,6 +107,62 @@ def navigate_to_times(page) -> None:
     log(f"Reached appointment page: {page.url}")
 
 
+def wait_for_availability_content(page) -> None:
+    """
+    Wait until the appointment availability area has rendered and then
+    remained unchanged for at least one second.
+
+    A valid terminal state contains either:
+      1. at least one real bookable slot (.available-time), or
+      2. the site's explicit "No more available time slots" message.
+
+    Waiting for stability prevents a false zero if #dateTimesContainer appears
+    before all of its availability contents finish rendering.
+    """
+    log("Waiting for appointment availability content...")
+
+    page.wait_for_function(
+        """
+        () => {
+            const container = document.querySelector('#dateTimesContainer');
+            if (!container) return false;
+
+            const hasAvailableSlot = Boolean(
+                container.querySelector('.available-time')
+            );
+
+            const hasNoAvailabilityMessage =
+                /no more available time slots/i.test(
+                    container.innerText || ''
+                );
+
+            if (!hasAvailableSlot && !hasNoAvailabilityMessage) {
+                window.__weddingAvailabilityStableState = null;
+                return false;
+            }
+
+            const snapshot = container.innerHTML;
+            const now = Date.now();
+            const previous = window.__weddingAvailabilityStableState;
+
+            if (!previous || previous.snapshot !== snapshot) {
+                window.__weddingAvailabilityStableState = {
+                    snapshot,
+                    since: now,
+                };
+                return false;
+            }
+
+            return now - previous.since >= 1000;
+        }
+        """,
+        polling=250,
+        timeout=30_000,
+    )
+
+    log("Appointment availability content is ready and stable.")
+
+
 def extract_slots(page) -> list[dict]:
     """
     Extract actual clickable appointment slots.
@@ -118,6 +174,8 @@ def extract_slots(page) -> list[dict]:
     "No more available time slots", because a page can contain both sold-out
     dates and available dates at the same time.
     """
+    wait_for_availability_content(page)
+
     slot_buttons = page.locator("button:has(.available-time)")
     count = slot_buttons.count()
 
