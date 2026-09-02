@@ -109,38 +109,60 @@ def navigate_to_times(page) -> None:
 
 def wait_for_availability_content(page) -> None:
     """
-    Wait until availability content has really appeared, then wait until the
-    structural availability counts are stable for about two seconds.
+    Wait until the Toronto appointment data has actually rendered, then wait
+    briefly for the availability structure to stop changing.
 
-    We intentionally do NOT require the container's entire innerHTML to stop
-    changing, because the Toronto booking page can keep updating unrelated DOM
-    state even after availability is fully rendered.
+    In the hydrated #dateTimesContainer, sold-out dates are rendered as:
+        <div class="text-danger">No more available time slots</div>
+
+    Available appointments contain:
+        <span class="available-time">...</span>
+
+    We deliberately key off those real hydrated elements rather than the
+    pre-hydration markup elsewhere on the page.
     """
     log("Waiting for appointment availability content...")
 
-    # First require real evidence that the appointment data has rendered:
-    # either a bookable slot or the site's explicit sold-out warning.
-    terminal_marker = page.locator(
-        "#dateTimesContainer .available-time, "
-        "#dateTimesContainer .warning-message"
-    ).first
-    terminal_marker.wait_for(state="attached", timeout=30_000)
+    # Wait for real appointment data inside the hydrated container.
+    page.wait_for_function(
+        """
+        () => {
+            const container = document.querySelector('#dateTimesContainer');
+            if (!container) return false;
+
+            if (container.querySelector('.available-time')) {
+                return true;
+            }
+
+            return Array.from(
+                container.querySelectorAll('.text-danger')
+            ).some((element) =>
+                /no more available time slots/i.test(
+                    element.textContent || ''
+                )
+            );
+        }
+        """,
+        polling=250,
+        timeout=30_000,
+    )
 
     previous_state = None
     stable_checks = 0
 
-    # Poll for up to another 15 seconds. We only care that the STRUCTURE used
-    # by the scraper stops changing: date sections, available slots, and
-    # explicit warning messages. Four identical 500 ms samples ~= 2 seconds.
+    # The page may hydrate date sections incrementally. Wait until the pieces
+    # relevant to availability have held the same counts for ~2 seconds.
     for _ in range(30):
         date_count = page.locator(
-            "#dateTimesContainer .date.one-queue"
+            "#dateTimesContainer section.accordion__section"
         ).count()
+
         slot_count = page.locator(
             "#dateTimesContainer .available-time"
         ).count()
+
         warning_count = page.locator(
-            "#dateTimesContainer .warning-message"
+            "#dateTimesContainer .text-danger"
         ).filter(
             has_text=re.compile(
                 r"No more available time slots",
