@@ -3,11 +3,17 @@ name: Check Toronto Wedding Chamber
 on:
   schedule:
     - cron: "*/10 * * * *"
+
   workflow_dispatch:
+    inputs:
+      test_notification:
+        description: "Send a Discord test notification even if there are no slots"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
-  issues: write
 
 concurrency:
   group: toronto-wedding-monitor
@@ -37,32 +43,110 @@ jobs:
         id: scrape
         run: python scraper.py
 
-      - name: Create notification issue for new slots
-        if: steps.scrape.outputs.new_count != '0'
+      - name: Send Discord notification
+        if: steps.scrape.outputs.new_count != '0' || inputs.test_notification == true
         env:
-          GH_TOKEN: ${{ github.token }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          NEW_COUNT: ${{ steps.scrape.outputs.new_count }}
           NEW_SLOTS: ${{ steps.scrape.outputs.new_slots_json }}
+          TEST_NOTIFICATION: ${{ inputs.test_notification }}
         run: |
-          python - <<'PY' > /tmp/issue_body.txt
-          import json, os
-          slots = json.loads(os.environ['NEW_SLOTS'])
-          print("New Toronto Old City Hall wedding chamber availability detected:\n")
-          for s in slots:
-              print(f"- **{s['label']}**")
-          print("\nBook here: https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en")
-          print("\n_This issue was created automatically by the wedding-slot monitor._")
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          webhook = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
+          if not webhook:
+              raise RuntimeError(
+                  "DISCORD_WEBHOOK_URL is not configured. "
+                  "Add it under Settings -> Secrets and variables -> Actions."
+              )
+
+          new_count = int(os.environ.get("NEW_COUNT") or "0")
+          test_mode = os.environ.get("TEST_NOTIFICATION", "").lower() == "true"
+
+          try:
+              slots = json.loads(os.environ.get("NEW_SLOTS") or "[]")
+          except json.JSONDecodeError:
+              slots = []
+
+          booking_url = (
+              "https://reservation.frontdesksuite.ca/torontoprod/wedding/"
+              "Home/Index?Culture=en"
+              "&PageId=c7b8201e-8573-4225-ba98-76bd4cf2d376"
+              "&ShouldStartReserveTimeFlow=False"
+              "&ButtonId=00000000-0000-0000-0000-000000000000"
+          )
+
+          if new_count > 0 and slots:
+              lines = [
+                  "💍 **Toronto Old City Hall wedding slot available!**",
+                  "",
+              ]
+
+              for slot in slots:
+                  lines.append(f"• {slot['label']}")
+
+              lines += [
+                  "",
+                  f"Book here: {booking_url}",
+              ]
+
+              if test_mode:
+                  lines += [
+                      "",
+                      "🧪 This run was also launched in test mode.",
+                  ]
+
+          elif test_mode:
+              lines = [
+                  "🧪 **Toronto wedding monitor test successful**",
+                  "",
+                  "Currently there are **no available Old City Hall wedding slots**.",
+                  "",
+                  "The scraper ran successfully and Discord notifications are working.",
+              ]
+
+          else:
+              raise RuntimeError("Notification step ran unexpectedly.")
+
+          payload = json.dumps(
+              {
+                  "content": "\n".join(lines),
+                  "allowed_mentions": {"parse": []},
+              }
+          ).encode("utf-8")
+
+          request = urllib.request.Request(
+              webhook,
+              data=payload,
+              headers={
+                  "Content-Type": "application/json",
+                  "User-Agent": "toronto-wedding-monitor/1.0",
+              },
+              method="POST",
+          )
+
+          with urllib.request.urlopen(request, timeout=20) as response:
+              if response.status not in (200, 204):
+                  raise RuntimeError(
+                      f"Discord webhook returned HTTP {response.status}"
+                  )
+
+          print("Discord notification sent.")
           PY
-          gh issue create \
-            --title "💍 Wedding slot available" \
-            --body-file /tmp/issue_body.txt
 
       - name: Persist current availability state
         run: |
           if git diff --quiet -- seen_slots.json; then
+            echo "No state change."
             exit 0
           fi
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add seen_slots.json
           git commit -m "Update wedding slot state"
           git push
