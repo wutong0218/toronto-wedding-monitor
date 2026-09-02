@@ -109,58 +109,67 @@ def navigate_to_times(page) -> None:
 
 def wait_for_availability_content(page) -> None:
     """
-    Wait until the appointment availability area has rendered and then
-    remained unchanged for at least one second.
+    Wait until availability content has really appeared, then wait until the
+    structural availability counts are stable for about two seconds.
 
-    A valid terminal state contains either:
-      1. at least one real bookable slot (.available-time), or
-      2. the site's explicit "No more available time slots" message.
-
-    Waiting for stability prevents a false zero if #dateTimesContainer appears
-    before all of its availability contents finish rendering.
+    We intentionally do NOT require the container's entire innerHTML to stop
+    changing, because the Toronto booking page can keep updating unrelated DOM
+    state even after availability is fully rendered.
     """
     log("Waiting for appointment availability content...")
 
-    page.wait_for_function(
-        """
-        () => {
-            const container = document.querySelector('#dateTimesContainer');
-            if (!container) return false;
+    # First require real evidence that the appointment data has rendered:
+    # either a bookable slot or the site's explicit sold-out warning.
+    terminal_marker = page.locator(
+        "#dateTimesContainer .available-time, "
+        "#dateTimesContainer .warning-message"
+    ).first
+    terminal_marker.wait_for(state="attached", timeout=30_000)
 
-            const hasAvailableSlot = Boolean(
-                container.querySelector('.available-time')
-            );
+    previous_state = None
+    stable_checks = 0
 
-            const hasNoAvailabilityMessage =
-                /no more available time slots/i.test(
-                    container.innerText || ''
-                );
+    # Poll for up to another 15 seconds. We only care that the STRUCTURE used
+    # by the scraper stops changing: date sections, available slots, and
+    # explicit warning messages. Four identical 500 ms samples ~= 2 seconds.
+    for _ in range(30):
+        date_count = page.locator(
+            "#dateTimesContainer .date.one-queue"
+        ).count()
+        slot_count = page.locator(
+            "#dateTimesContainer .available-time"
+        ).count()
+        warning_count = page.locator(
+            "#dateTimesContainer .warning-message"
+        ).filter(
+            has_text=re.compile(
+                r"No more available time slots",
+                re.IGNORECASE,
+            )
+        ).count()
 
-            if (!hasAvailableSlot && !hasNoAvailabilityMessage) {
-                window.__weddingAvailabilityStableState = null;
-                return false;
-            }
+        state = (date_count, slot_count, warning_count)
 
-            const snapshot = container.innerHTML;
-            const now = Date.now();
-            const previous = window.__weddingAvailabilityStableState;
+        if (slot_count > 0 or warning_count > 0) and state == previous_state:
+            stable_checks += 1
+        else:
+            stable_checks = 0
 
-            if (!previous || previous.snapshot !== snapshot) {
-                window.__weddingAvailabilityStableState = {
-                    snapshot,
-                    since: now,
-                };
-                return false;
-            }
+        if stable_checks >= 4:
+            log(
+                "Appointment availability content is ready and stable "
+                f"(dates={date_count}, slots={slot_count}, "
+                f"warnings={warning_count})."
+            )
+            return
 
-            return now - previous.since >= 1000;
-        }
-        """,
-        polling=250,
-        timeout=30_000,
+        previous_state = state
+        page.wait_for_timeout(500)
+
+    raise RuntimeError(
+        "Availability content appeared but did not reach a stable structural "
+        "state within 15 seconds."
     )
-
-    log("Appointment availability content is ready and stable.")
 
 
 def extract_slots(page) -> list[dict]:
