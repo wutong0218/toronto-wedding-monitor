@@ -1,0 +1,35 @@
+TORONTO WEDDING MONITOR — GITHUB WEB UPLOAD
+
+You do NOT need GitHub Desktop or PowerShell.
+
+1. Extract this ZIP on Windows.
+2. Open your GitHub repository in your browser.
+3. Click: Add file -> Upload files.
+4. In Windows File Explorer, open the extracted folder.
+5. Select ALL of these items and drag them onto GitHub:
+
+   .github
+   .gitignore
+   README.md
+   UPLOAD-INSTRUCTIONS.txt
+   requirements.txt
+   scraper.py
+   seen_slots.json
+
+6. Click "Commit changes".
+7. On GitHub, verify this exact file exists:
+
+   .github/workflows/check.yml
+
+   You can click .github -> workflows -> check.yml to confirm.
+
+8. Click the Actions tab. You should now see:
+
+   Check Toronto Wedding Chamber
+
+9. Open it -> Run workflow -> Run workflow.
+
+IMPORTANT:
+- Do not upload only check.yml to the repository root. GitHub only recognizes workflow files inside .github/workflows/.
+- Do not upload the outer extracted folder as a single nested folder. The files above should be at the repository root.
+- If the first Action run fails, open the failed run and send ChatGPT the error log. The workflow also saves debug HTML/screenshot artifacts when the scraper fails.
