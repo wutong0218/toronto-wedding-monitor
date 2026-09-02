@@ -1,0 +1,77 @@
+name: Check Toronto Wedding Chamber
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: toronto-wedding-monitor
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      - name: Check availability
+        id: scrape
+        run: python scraper.py
+
+      - name: Create notification issue for new slots
+        if: steps.scrape.outputs.new_count != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEW_SLOTS: ${{ steps.scrape.outputs.new_slots_json }}
+        run: |
+          python - <<'PY' > /tmp/issue_body.txt
+          import json, os
+          slots = json.loads(os.environ['NEW_SLOTS'])
+          print("New Toronto Old City Hall wedding chamber availability detected:\n")
+          for s in slots:
+              print(f"- **{s['label']}**")
+          print("\nBook here: https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en")
+          print("\n_This issue was created automatically by the wedding-slot monitor._")
+          PY
+          gh issue create \
+            --title "💍 Wedding slot available" \
+            --body-file /tmp/issue_body.txt
+
+      - name: Persist current availability state
+        run: |
+          if git diff --quiet -- seen_slots.json; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add seen_slots.json
+          git commit -m "Update wedding slot state"
+          git push
+
+      - name: Upload debug artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scraper-debug
+          path: artifacts/
+          if-no-files-found: ignore
+          retention-days: 7
