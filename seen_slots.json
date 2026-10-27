@@ -50,18 +50,8 @@
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
   },
   {
-    "label": "2:00 p.m. Thursday February 11ᵗʰ, 2027",
-    "datetime": "2027-02-11T14:00:00-05:00",
-    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
-  },
-  {
     "label": "2:30 p.m. Thursday February 11ᵗʰ, 2027",
     "datetime": "2027-02-11T14:30:00-05:00",
-    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
-  },
-  {
-    "label": "3:00 p.m. Thursday February 11ᵗʰ, 2027",
-    "datetime": "2027-02-11T15:00:00-05:00",
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
   },
   {
@@ -140,6 +130,11 @@
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
   },
   {
+    "label": "11:00 a.m. Thursday March 11ᵗʰ, 2027",
+    "datetime": "2027-03-11T11:00:00-05:00",
+    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
+  },
+  {
     "label": "2:30 p.m. Thursday March 11ᵗʰ, 2027",
     "datetime": "2027-03-11T14:30:00-05:00",
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
@@ -152,11 +147,6 @@
   {
     "label": "10:30 a.m. Thursday April 1ˢᵗ, 2027",
     "datetime": "2027-04-01T10:30:00-04:00",
-    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
-  },
-  {
-    "label": "11:00 a.m. Thursday April 1ˢᵗ, 2027",
-    "datetime": "2027-04-01T11:00:00-04:00",
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
   },
   {
@@ -192,11 +182,6 @@
   {
     "label": "11:30 a.m. Thursday April 22ⁿᵈ, 2027",
     "datetime": "2027-04-22T11:30:00-04:00",
-    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
-  },
-  {
-    "label": "12:00 p.m. Thursday April 22ⁿᵈ, 2027",
-    "datetime": "2027-04-22T12:00:00-04:00",
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
   },
   {
