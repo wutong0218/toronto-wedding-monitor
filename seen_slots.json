@@ -1,10 +1,5 @@
 [
   {
-    "label": "10:00 a.m. Thursday November 5ᵗʰ, 2026",
-    "datetime": "2026-11-05T10:00:00-05:00",
-    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
-  },
-  {
     "label": "10:00 a.m. Thursday February 4ᵗʰ, 2027",
     "datetime": "2027-02-04T10:00:00-05:00",
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
@@ -30,11 +25,6 @@
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
   },
   {
-    "label": "12:30 p.m. Thursday February 18ᵗʰ, 2027",
-    "datetime": "2027-02-18T12:30:00-05:00",
-    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
-  },
-  {
     "label": "10:00 a.m. Thursday February 25ᵗʰ, 2027",
     "datetime": "2027-02-25T10:00:00-05:00",
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
@@ -42,6 +32,11 @@
   {
     "label": "10:30 a.m. Thursday February 25ᵗʰ, 2027",
     "datetime": "2027-02-25T10:30:00-05:00",
+    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
+  },
+  {
+    "label": "2:30 p.m. Thursday February 25ᵗʰ, 2027",
+    "datetime": "2027-02-25T14:30:00-05:00",
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
   },
   {
@@ -70,11 +65,6 @@
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
   },
   {
-    "label": "11:00 a.m. Thursday March 11ᵗʰ, 2027",
-    "datetime": "2027-03-11T11:00:00-05:00",
-    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
-  },
-  {
     "label": "10:00 a.m. Thursday April 22ⁿᵈ, 2027",
     "datetime": "2027-04-22T10:00:00-04:00",
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
@@ -85,18 +75,8 @@
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
   },
   {
-    "label": "11:00 a.m. Thursday April 22ⁿᵈ, 2027",
-    "datetime": "2027-04-22T11:00:00-04:00",
-    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
-  },
-  {
     "label": "10:00 a.m. Thursday April 29ᵗʰ, 2027",
     "datetime": "2027-04-29T10:00:00-04:00",
-    "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
-  },
-  {
-    "label": "11:00 a.m. Thursday April 29ᵗʰ, 2027",
-    "datetime": "2027-04-29T11:00:00-04:00",
     "booking_url": "https://reservation.frontdesksuite.ca/torontoprod/wedding/ReserveTime/TimeSelection?pageId=95ac460d-d4ae-4d2b-bf96-de0f412f6975&buttonId=f5091379-600c-442e-9d9d-646b1d6a7e71&culture=en"
   }
 ]
